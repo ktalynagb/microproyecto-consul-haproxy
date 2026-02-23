@@ -1,0 +1,33 @@
+global
+  daemon
+  maxconn 2048
+
+defaults
+  mode http
+  timeout connect 5s
+  timeout client  30s
+  timeout server  30s
+
+frontend fe_http
+  bind *:80
+  default_backend be_web
+
+backend be_web
+  balance roundrobin
+  option httpchk GET /health
+  http-check expect status 200
+
+  {{- $svc := service "web" -}}
+  {{- if gt (len $svc) 0 -}}
+  {{- range $i, $s := $svc }}
+  server web{{$i}} {{$s.Address}}:{{$s.Port}} check
+  {{- end }}
+  {{- else -}}
+  errorfile 503 /etc/haproxy/errors/503.http
+  {{- end }}
+
+listen stats
+  bind *:8404
+  stats enable
+  stats uri /
+  stats refresh 5s
