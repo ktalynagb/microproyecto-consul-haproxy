@@ -17,13 +17,14 @@ backend be_web
   option httpchk GET /health
   http-check expect status 200
 
-  {{- $svc := service "web" -}}
-  {{- if gt (len $svc) 0 -}}
-  {{- range $i, $s := $svc }}
-  server web{{$i}} {{$s.Address}}:{{$s.Port}} check
-  {{- end }}
-  {{- else -}}
+  {{- $svc := service "web" }}
+  {{- if gt (len $svc) 0 }}
+    {{- range $i, $s := $svc }}
+  server web{{ $i }} {{ $s.Address }}:{{ $s.Port }} check
+    {{- end }}
+  {{- else }}
   errorfile 503 /etc/haproxy/errors/503.http
+  server _dummy 127.0.0.1:1 disabled
   {{- end }}
 
 listen stats
