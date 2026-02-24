@@ -52,22 +52,22 @@ Nota: config.ssh.insert_key = false se usó para evitar los problemas de llaves 
 
 3. app:
 
-- Aquí va el código de la aplicación NodeJS.
-- Esta app es la que se va a replicar en web1 y web2 (varios puertos) para demostrar escalabilidad.
+- Aquí va el código de la aplicación NodeJS. NO HAY
+- Esta app es la que se va a replicar en web1 y web2 (varios puertos) para demostrar escalabilidad. NO HAY
 
 
 4. haproxy:
 
-- Aquí va la configuración del balanceador.
+- Aquí va la configuración del balanceador. YA HAY
 
-- haproxy.cfg o plantilla (haproxy.ctmpl) si se usa service discovery con Consul.
+- haproxy.cfg o plantilla (haproxy.ctmpl) si se usa service discovery con Consul. YA HAY
 
-- 503.http: una página personalizada para cuando no haya backends disponibles.
+- 503.http: una página personalizada para cuando no haya backends disponibles. YA HAY
 
 
 5. artillery:
 
-- Aquí van los archivos YAML de pruebas de carga (bajo/medio/alto).
+- Aquí van los archivos YAML de pruebas de carga (bajo/medio/alto). NO HAY
 
 
 En qué continuar:
@@ -76,15 +76,15 @@ Pasar de provisioning inline a provisioning por scripts:
 
 - Crear los scripts reales en provision (ya)
 
-- Modificar el Vagrantfile para que llame esos scripts con path:.
+- Modificar el Vagrantfile para que llame esos scripts con path (ya).
 
 Ejecutar (ya):
 
-- vagrant provision web1
+- vagrant provision web1 (ya)
 
-- vagrant provision web2
+- vagrant provision web2 (ya)
 
-- vagrant provision haproxy
+- vagrant provision haproxy (ya)
 
 Verificar desde el host:
 
