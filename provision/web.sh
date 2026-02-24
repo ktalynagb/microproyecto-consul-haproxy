@@ -7,7 +7,11 @@ curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 sudo mkdir -p /opt/webapp
-sudo cp /vagrant/app/server.js /opt/webapp/server.js
+# ── CAMBIO: copiar también package.json e instalar dependencias ─────────────────
+sudo cp /vagrant/app/server.js  /opt/webapp/server.js
+sudo cp /vagrant/app/package.json /opt/webapp/package.json
+cd /opt/webapp && sudo npm install --production
+# ────────────────────────────────────────────────────────────────────────────────
 
 REPLICAS=(3001 3002 3003)
 

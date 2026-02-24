@@ -1,0 +1,21 @@
+config:
+  target: "http://localhost:8080"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+      name: "Carga baja (10 req/s)"
+  defaults:
+    headers:
+      Accept: "application/json"
+
+scenarios:
+  - name: "Round-robin balanceo"
+    flow:
+      - get:
+          url: "/"
+          expect:
+            - statusCode: 200
+      - get:
+          url: "/health"
+          expect:
+            - statusCode: 200

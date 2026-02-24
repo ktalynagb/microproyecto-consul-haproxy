@@ -1,0 +1,21 @@
+config:
+  target: "http://localhost:8080"
+  phases:
+    - duration: 120
+      arrivalRate: 200
+      name: "Carga alta (200 req/s)"
+  defaults:
+    headers:
+      Accept: "application/json"
+
+scenarios:
+  - name: "Round-robin bajo carga alta"
+    flow:
+      - get:
+          url: "/"
+          expect:
+            - statusCode: 200
+      - get:
+          url: "/health"
+          expect:
+            - statusCode: 200
