@@ -12,17 +12,16 @@ sudo mkdir -p /etc/haproxy/errors
 sudo cp /vagrant/haproxy/503.http  /etc/haproxy/errors/503.http
 sudo cp /vagrant/haproxy/haproxy.ctmpl /etc/haproxy/haproxy.ctmpl
 
-# ── Script de espera al líder Consul ──────────────────────────────────────────
+# Script de espera al lider Consul
 sudo tee /usr/local/bin/wait-consul.sh >/dev/null <<'SCRIPT'
 #!/usr/bin/env bash
-echo "Esperando líder Consul..."
-til curl -sf http://127.0.0.1:8500/v1/status/leader 2>/dev/null | grep -q '"'; do
+echo "Esperando lider Consul..."
+until curl -sf http://127.0.0.1:8500/v1/status/leader 2>/dev/null | grep -q '"'; do
   sleep 2
 done
 echo "Consul listo."
 SCRIPT
 sudo chmod +x /usr/local/bin/wait-consul.sh
-# ──────────────────────────────────────────────────────────────────────────────
 
 sudo tee /etc/systemd/system/consul-template.service >/dev/null <<'EOF'
 [Unit]
@@ -45,13 +44,12 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable haproxy consul-template
 
-# ── BUG FIX: generar haproxy.cfg inicial ANTES de arrancar HAProxy ─────────────
+# BUG FIX: generar haproxy.cfg inicial ANTES de arrancar HAProxy
 /usr/local/bin/wait-consul.sh
 /usr/local/bin/consul-template \
   -once \
   -consul-addr=127.0.0.1:8500 \
   -template "/etc/haproxy/haproxy.ctmpl:/etc/haproxy/haproxy.cfg"
-# ──────────────────────────────────────────────────────────────────────────────
 
 sudo systemctl restart haproxy
 sudo systemctl start consul-template
