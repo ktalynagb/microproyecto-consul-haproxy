@@ -11,21 +11,20 @@ defaults
 
 frontend fe_http
   bind *:80
-  default_backend be_web
+  default_backend http_back
 
-backend be_web
+backend http_back
   balance roundrobin
   option httpchk GET /health
   http-check expect status 200
 
-  {{- $svc := service "web" }}
-  {{- if gt (len $svc) 0 }}
-    {{- range $i, $s := $svc }}
-  server web{{ $i }} {{ $s.Address }}:{{ $s.Port }} check
-    {{- end }}
-  {{- else }}
-  server _dummy 127.0.0.1:1 disabled
-  {{- end }}
+  # Descubre instancias del servicio "web" via Consul DNS (SRV)
+  server-template web 1-10 _web._tcp.service.consul resolvers consul resolve-prefer ipv4 check
+
+resolvers consul
+  nameserver consul 127.0.0.1:8600
+  accepted_payload_size 8192
+  hold valid 5s
 
 listen stats
   bind *:8404
